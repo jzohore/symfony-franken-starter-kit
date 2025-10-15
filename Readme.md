@@ -4,16 +4,17 @@
 [![Symfony Version](https://img.shields.io/badge/Symfony-7.1-black.svg)](https://symfony.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A modern Symfony 7.1 starter powered by **FrankenPHP**, **PostgreSQL**, and **Docker** — ready for production and local development.
+A modern Symfony 7.1 starter powered by **FrankenPHP**, **PostgreSQL**, and **Docker** — ready for production and local development. Designed to help developers start projects quickly while following best practices, including Hexagonal Architecture and clean code principles.
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/[YOUR_USERNAME]/symfony-starter-kit.git
-cd docker
-make install
+git clone https://github.com/jzohore/symfony-franken-starter-kit.git
+cd symfony-franken-starter-kit/docker
+docker-compose exec app bash
+composer install
 ```
 
 Access your app at **[http://localhost](http://localhost)**
@@ -29,6 +30,23 @@ Access your app at **[http://localhost](http://localhost)**
 * 🔄 **Messenger** — background jobs & async tasks
 * 🧰 **Makefile** — 20+ handy commands for dev & ops
 * 🧪 Ready for testing, CI/CD, and real deployment
+* 🏗️ **Hexagonal Architecture Friendly Command**:
+
+```php
+#[AsCommand(
+    name: 'app:make:domain-entity',
+    description: 'Crée une entité Domain/<Nom>/<Nom>.php, son <Nom>RepositoryInterface, et src/Infrastructure/Repository/<Nom>Repository (Doctrine) qui l\'implémente et utilise DatabaseConnectionService.',
+)]
+```
+
+This command is a **developer tip** to accelerate creating clean domain entities in a Hexagonal Architecture setup:
+
+* Automatically generates your `Domain` entity and its repository interface.
+* Creates a Doctrine repository in the `Infrastructure` layer wired with `DatabaseConnectionService`.
+* Encourages separation of concerns, keeping your domain logic independent from infrastructure.
+* Saves time and reduces boilerplate code when starting new entities.
+
+> Tip: Use this command every time you need a new domain entity to maintain a clean and consistent architecture across your project.
 
 ---
 
