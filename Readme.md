@@ -35,15 +35,15 @@ Access your app at **[http://localhost](http://localhost)**
 ```php
 #[AsCommand(
     name: 'app:make:domain-entity',
-    description: 'Crée une entité Domain/<Nom>/<Nom>.php, son <Nom>RepositoryInterface, et src/Infrastructure/Repository/<Nom>Repository (Doctrine) qui l\'implémente et utilise DatabaseConnectionService.',
+    description: 'Crée une entité Domain/<Nom>/<Nom>.php, son <Nom>RepositoryInterface, et src/Infrastructure/Repository/<Nom>Repository (Doctrine).',
 )]
 ```
 
 This command is a **developer tip** to accelerate creating clean domain entities in a Hexagonal Architecture setup:
 
 * Automatically generates your `Domain` entity and its repository interface.
-* Creates a Doctrine repository in the `Infrastructure` layer wired with `DatabaseConnectionService`.
-* Encourages separation of concerns, keeping your domain logic independent from infrastructure.
+* Creates a Doctrine repository in the `Infrastructure` layer.
+* Encourages separation of concerns, keeping your domain logic independent of infrastructure.
 * Saves time and reduces boilerplate code when starting new entities.
 
 > Tip: Use this command every time you need a new domain entity to maintain a clean and consistent architecture across your project.

@@ -321,7 +321,6 @@ PHP;
 declare(strict_types=1);
 namespace App\Infrastructure\{{STUDLY}}\Doctrine;
 
-use App\Infrastructure\Shared\Service\DatabaseConnectionService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -333,33 +332,32 @@ final class {{STUDLY}}Repository extends ServiceEntityRepository implements {{ST
 {
     public function __construct(
         ManagerRegistry $registry,
-        private readonly DatabaseConnectionService $databaseConnectionService,
     ) {
         parent::__construct($registry, {{STUDLY}}::class);
     }
 
     public function getById(Uuid $id): ?{{STUDLY}}
     {
-        return $this->databaseConnectionService->getEntityManager()->find({{STUDLY}}::class, $id);
+        return $this->getEntityManager()->find({{STUDLY}}::class, $id);
     }
 
     public function save({{STUDLY}} $entity): void
     {
-        $em = $this->databaseConnectionService->getEntityManager();
+        $em = $this->getEntityManager();
         $em->persist($entity);
         $em->flush();
     }
 
     public function delete({{STUDLY}} $entity): void
     {
-        $em = $this->databaseConnectionService->getEntityManager();
+        $em = $this->getEntityManager();
         $em->remove($entity);
         $em->flush();
     }
 
     public function search(?string $querySearch = null, ?array $status = [], ?bool $isDeleted = null): QueryBuilder
     {
-        $em = $this->databaseConnectionService->getEntityManager();
+        $em = $this->getEntityManager();
 
         $alias = strtolower((new \ReflectionClass({{STUDLY}}::class))->getShortName());
 
