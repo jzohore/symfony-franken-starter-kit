@@ -1,3 +1,23 @@
-body {
-    background-color: skyblue;
+@import "tailwindcss";
+
+/* (optionnel mais utile) préciser les sources si certaines classes ne sont pas détectées */
+@source "templates";
+@source "assets";
+@source not "public/**";
+
+@plugin "daisyui";
+
+
+@theme {
+    --text-base: .8rem;         /* ✅ autorisé */
+    /* exemples utiles */
+    --font-sans: ui-sans-serif, system-ui, sans-serif;
+    --color-brand: #2563eb;
+    --breakpoint-lg: 1024px;
+
+    @keyframes wiggle {        /* ✅ autorisé */
+        from { transform: rotate(-3deg); }
+        to   { transform: rotate(3deg); }
+    }
 }
+

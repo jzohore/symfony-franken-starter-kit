@@ -1,0 +1,103 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/frankenphp/Dockerfile
+      target: frankenphp_dev
+    image: my-symfony-app:dev
+    container_name: symfony_app
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN}
+      XDG_DATA_HOME: /data
+      XDG_CONFIG_HOME: /config
+      SERVER_NAME: :443
+    volumes:
+      - ../:/srv/app:cached
+      - ./frankenphp/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - caddy_data:/data/caddy
+      - caddy_config:/config/caddy
+    ports:
+      - "8443:443"
+      - "8000:80"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - launchkit
+    tty: true
+
+  db:
+    image: postgres:16-alpine
+    container_name: symfony_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-launchkit}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - launchkit
+
+  redis:
+    image: redis:7-alpine
+    container_name: symfony_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - launchkit
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: symfony_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - launchkit
+
+volumes:
+  caddy_data:
+  caddy_config:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  launchkit:
+    driver: bridge

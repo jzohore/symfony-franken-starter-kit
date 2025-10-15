@@ -1,0 +1,29 @@
+-- Liste des databases
+\l
+
+-- Liste des tables
+\dt
+
+-- Structure d'une table
+\d user
+
+-- Liste des utilisateurs
+\du
+
+-- Taille des tables
+\dt+
+
+-- Connexion à une autre DB
+\c symfony_dev
+
+-- Quitter psql
+\q
+
+-- Aide sur les commandes \
+\?
+
+-- Aide SQL
+\h
+
+-- Historique des commandes
+\s

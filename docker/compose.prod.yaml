@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: ./frankenphp
+      dockerfile: Dockerfile
+    image: my-symfony-app:prod
+    container_name: symfony_app_prod
+    env_file:
+      - ../.env.prod
+    ports:
+      - "8000:80"
+    working_dir: /srv/app
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    container_name: symfony_db_prod
+    environment:
+      POSTGRES_USER: prod_user
+      POSTGRES_PASSWORD: prod_password
+      POSTGRES_DB: prod_db
+    volumes:
+      - db_prod_data:/var/lib/postgresql/data
+
+volumes:
+  db_prod_data:

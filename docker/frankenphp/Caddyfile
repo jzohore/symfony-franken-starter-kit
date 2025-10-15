@@ -1,0 +1,26 @@
+{
+    frankenphp
+    auto_https off
+}
+
+:443 {
+    encode gzip zstd
+    root * /srv/app/public
+
+    tls internal {
+        on_demand
+    }
+
+    php_server
+    file_server
+
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+}
+
+:80 {
+    redir https://{host}:8443{uri} permanent
+}

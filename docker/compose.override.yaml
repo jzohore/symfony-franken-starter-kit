@@ -1,0 +1,14 @@
+services:
+  worker:
+    image: my-symfony-app:dev
+    container_name: symfony_worker
+    env_file:
+      - ../.env
+    depends_on:
+      - rabbitmq
+      - db
+      - redis
+    working_dir: /srv/app
+    volumes:
+      - ..:/srv/app:cached
+    command: ["bash", "-lc", "cd /srv/app && php bin/console messenger:consume async -vv --time-limit=0"]

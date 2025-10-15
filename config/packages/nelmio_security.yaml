@@ -1,0 +1,29 @@
+nelmio_security:
+    # prevents framing of the entire site
+    clickjacking:
+        paths:
+            '^/.*': DENY
+    external_redirects:
+        abort: true
+        log: true
+        allow_list:
+            - 'https://checkout.stripe.com'
+            - 'https://*.stripe.com'
+    csp:
+        enforce:
+            browser_adaptive:
+                enabled: true
+    content_type:
+        nosniff: true
+
+
+    # Send a full URL in the `Referer` header when performing a same-origin request,
+    # only send the origin of the document to secure destination (HTTPS->HTTPS),
+    # and send no header to a less secure destination (HTTPS->HTTP).
+    # If `strict-origin-when-cross-origin` is not supported, use `no-referrer` policy,
+    # no referrer information is sent along with requests.
+    referrer_policy:
+        enabled: true
+        policies:
+            - 'no-referrer'
+            - 'strict-origin-when-cross-origin'
