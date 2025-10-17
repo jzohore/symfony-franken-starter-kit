@@ -185,44 +185,40 @@ namespace {{DOMAIN_NS}}\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\DBAL\Types\Types;
 use DateTimeImmutable;
-use DateTimeZone;
 use {{REPOSITORY_FQCN}};
-use App\Infrastructure\Shared\Traits\Trashable;
 
 #[ORM\Entity(repositoryClass: {{REPOSITORY_FQCNT}})]
 #[ORM\Table(name: '{{TABLE}}')]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 final class {{STUDLY}}
 {
-    use Trashable;
+    use SoftDeleteableEntity;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    public ?Uuid $id = null {
+    private ?Uuid $id = null {
         get => $this->id;
     }
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    public DateTimeImmutable $createdAt {
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
+    private DateTimeImmutable $createdAt {
         get => $this->createdAt;
     }
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    public ?DateTimeImmutable $updatedAt {
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable(on: 'update')]
+    private ?DateTimeImmutable $updatedAt {
         get => $this->updatedAt;
         set => $this->updatedAt = $value;
     }
 
-    public function __construct()
-    {
-        $tz = new DateTimeZone('Europe/Paris');
-        $this->createdAt = new DateTimeImmutable('now', $tz);
-        $this->updatedAt = new DateTimeImmutable('now', $tz);
-    }
-
-    // TODO: ajoutez vos champs de domaine ici.
 }
 PHP;
 
@@ -475,6 +471,7 @@ final class {$studly}DTO
     /**
      * @var Uuid|null
      */
+    #[Map(target: 'id')]
     public ?Uuid \$uuid = null;
 
     /**
@@ -487,14 +484,6 @@ final class {$studly}DTO
      */
     public ?DateTimeImmutable \$deletedAt = null;
 
-    public static function fromEntity({$entityShortName} \$entity): self
-    {
-        \$dto = new self();
-        \$dto->uuid = \$entity->id;
-        \$dto->updatedAt = \$entity->updatedAt;
-
-        return \$dto;
-    }
 }
 PHP;
     }

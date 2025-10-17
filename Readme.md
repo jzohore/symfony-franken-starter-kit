@@ -23,11 +23,12 @@ Access your app at **[http://localhost](http://localhost)**
 
 ## ⚙️ What’s Included
 
-* 🐘 **Symfony 7.1** — latest framework version
+* 🐘 **Symfony 7.3** — latest framework version
 * ⚡ **FrankenPHP** — modern Go-based PHP server
 * 🐳 **Docker Compose** — PostgreSQL 16 + PHP + Caddy setup
 * 📦 **Doctrine ORM** — UUIDs, timestamps, soft deletes
-* 🔄 **Messenger** — background jobs & async tasks
+* 🔄 **Messenger - Redis - RabbitMq** — background jobs & async tasks
+* 🔄 **Mercure** — RealTime
 * 🧰 **Makefile** — 20+ handy commands for dev & ops
 * 🧪 Ready for testing, CI/CD, and real deployment
 * 🏗️ **Hexagonal Architecture Friendly Command**:

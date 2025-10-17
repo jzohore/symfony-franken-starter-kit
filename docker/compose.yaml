@@ -91,6 +91,27 @@ services:
     networks:
       - launchkit
 
+  mercure:
+    image: dunglas/mercure:latest
+    container_name: symfony_mercure
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_EXTRA_DIRECTIVES: |
+        cors_origins http://localhost:8000 https://localhost:8443
+        anonymous
+    ports:
+      - "3000:80"
+    networks:
+      - launchkit
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:80/.well-known/mercure" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   caddy_data:
   caddy_config:
